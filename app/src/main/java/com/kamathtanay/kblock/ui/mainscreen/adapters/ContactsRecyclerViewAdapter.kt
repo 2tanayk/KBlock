@@ -4,8 +4,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.kamathtanay.kblock.R
 import com.kamathtanay.kblock.data.db.entity.Contact
 import com.kamathtanay.kblock.databinding.ContactItemBinding
 import com.kamathtanay.kblock.model.ContactItem
@@ -36,6 +38,13 @@ class ContactsRecyclerViewAdapter(val listener: OnItemClickListener) :
                 nameTextView.text = contactName
                 numberTextView.text = contactNumber
                 blockUnblockBtn.setImageResource(iconId)
+                blockUnblockLabel.text=if(iconId==R.drawable.ic_baseline_block_24) {
+                     blockUnblockLabel.setTextColor(ContextCompat.getColor(blockUnblockLabel.context,R.color.red_orange))
+                    "Unblock"
+                }else{
+                    blockUnblockLabel.setTextColor(ContextCompat.getColor(blockUnblockLabel.context,R.color.prussian_blue))
+                    "Block"
+                }
             }
         }
     }

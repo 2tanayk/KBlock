@@ -73,7 +73,7 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
                 binding.contactsProgressBar.show()
                 val recyclerViewContacts: MutableList<ContactItem> = it.map { contact ->
                     ContactItem(contact.id, contact.contactName, contact.contactPhoneNumber,
-                        if (contact.isBlocked) R.drawable.ic_baseline_block_24 else R.drawable.ic_baseline_phone_callback_24)
+                        if (contact.isBlocked) R.drawable.ic_baseline_block_24 else R.drawable.ic_baseline_unblock_24)
                 }.toMutableList()
                 binding.contactsRecyclerView.show()
                 contactsAdapter.submitList(recyclerViewContacts)
