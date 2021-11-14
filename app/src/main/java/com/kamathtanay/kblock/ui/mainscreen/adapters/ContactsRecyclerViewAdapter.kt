@@ -57,12 +57,14 @@ class ContactsRecyclerViewAdapter(val listener: OnItemClickListener) :
             b.root.setOnClickListener(this)
 
             b.blockUnblockBtn.setOnClickListener {
-                Log.e("Block Btn", "clicked!")
+                val position: Int = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    listener.onBlockUnblockClick(position)
+                }
             }
         }
 
         override fun onClick(view: View?) {
-            Log.e("ContactViewHolder", "clicked!")
             val position: Int = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 listener.onItemClick(position)

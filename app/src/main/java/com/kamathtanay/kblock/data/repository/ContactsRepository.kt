@@ -1,8 +1,9 @@
 package com.kamathtanay.kblock.data.repository
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.kamathtanay.kblock.data.contacts.KBlockContactsApi
 import com.kamathtanay.kblock.data.contacts.data.ContactData
 import com.kamathtanay.kblock.data.dao.ContactDao
@@ -40,6 +41,7 @@ class ContactsRepository(private val db: AppDatabase, private val contactsApi: K
             contactsList
         }
 
+
     suspend fun importAllContacts() {
         Log.e("Getting contacts...", "Started...")
         val contactsList = retrieveAllContacts()
@@ -47,15 +49,9 @@ class ContactsRepository(private val db: AppDatabase, private val contactsApi: K
         Log.e("Getting contacts...", "Done...combining")
 
         withContext(Dispatchers.Default) {
-            contactsList.forEach { contact ->
-                contact.numbers.forEach { n ->
-                    dbContactsList.add(
-                        Contact(
-                            contactName = contact.name,
-                            contactPhoneNumber = n
-                        )
-                    )
-                }
+            val cleanedContactData = cleanContactData(contactsList)
+            for ((key, value) in cleanedContactData) {
+                dbContactsList.add(Contact(contactName = value, contactPhoneNumber = key))
             }
         }
 
@@ -63,6 +59,19 @@ class ContactsRepository(private val db: AppDatabase, private val contactsApi: K
             db.getContactDao().saveAllContacts(dbContactsList)
         }
         Log.e("Getting contacts...", "combined")
+    }
+
+    private suspend fun cleanContactData(contactsList: ArrayList<ContactData>): HashMap<String, String> {
+        val contactsHashMap: HashMap<String, String> = HashMap()
+        for (contact in contactsList) {
+            for (number in contact.numbers) {
+                val cleanNumber = number.filter { !it.isWhitespace() }
+                if (!contactsHashMap.containsKey(cleanNumber)) {
+                    contactsHashMap[cleanNumber] = contact.name
+                }
+            }
+        }
+        return contactsHashMap
     }
 
     fun getAllUserContacts(): LiveData<List<Contact>> {
