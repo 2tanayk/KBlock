@@ -14,5 +14,5 @@ interface ContactDao {
     suspend fun saveAllContacts(contacts: List<Contact>)
 
     @Query("SELECT * FROM contact_table ORDER BY contact_name ASC")
-    fun getAllContacts(): LiveData<List<Contact>>
+    fun getAllUserContacts(): LiveData<List<Contact>>
 }

@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/ic_baseline_block_24.xml" value="0.18385416666666668" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/ic_baseline_people_24.xml" value="0.18385416666666668" />
+        <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/ic_baseline_phone_callback_24.xml" value="0.18385416666666668" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.18385416666666668" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/ic_disconnect.xml" value="0.18385416666666668" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/ic_il_contacts.xml" value="0.18385416666666668" />

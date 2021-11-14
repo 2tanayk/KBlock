@@ -6,7 +6,7 @@
     android:layout_height="100dp"
     android:elevation="5dp"
     android:layout_marginBottom="2dp"
-    app:cardCornerRadius="@dimen/material_emphasis_high_type">
+    app:cardCornerRadius="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -52,8 +52,7 @@
             app:layout_constraintBottom_toBottomOf="@id/contact_hr"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_block_24"
-            app:tint="@color/red_orange" />
+            app:srcCompat="@drawable/ic_baseline_phone_callback_24" />
 
         <androidx.legacy.widget.Space
             android:id="@+id/contact_hr"

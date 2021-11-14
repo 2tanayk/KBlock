@@ -20,14 +20,28 @@ class ContactsRecyclerViewAdapter(val listener: OnItemClickListener) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
-        return ContactViewHolder(ContactItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ContactViewHolder(
+            ContactItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
+        val contact = getItem(position)
+        with(contact) {
+            with(holder.b) {
+                nameTextView.text = contactName
+                numberTextView.text = contactNumber
+                blockUnblockBtn.setImageResource(iconId)
+            }
+        }
     }
 
 
-    inner class ContactViewHolder(private val b: ContactItemBinding) :
+    inner class ContactViewHolder(val b: ContactItemBinding) :
         RecyclerView.ViewHolder(b.root), View.OnClickListener {
 
         init {
