@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kamathtanay.kblock.R
 import com.kamathtanay.kblock.data.db.entity.Contact
 import com.kamathtanay.kblock.databinding.ContactItemBinding
@@ -18,7 +19,7 @@ class ContactsRecyclerViewAdapter(val listener: OnItemClickListener) :
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
-        fun onBlockUnblockClick(position: Int)
+        fun onBlockUnblockClick(position: Int,contactItem: ContactItem)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -58,8 +59,9 @@ class ContactsRecyclerViewAdapter(val listener: OnItemClickListener) :
 
             b.blockUnblockBtn.setOnClickListener {
                 val position: Int = adapterPosition
+                val contactData = getItem(position)
                 if (position != RecyclerView.NO_POSITION) {
-                    listener.onBlockUnblockClick(position)
+                    listener.onBlockUnblockClick(position, contactData)
                 }
             }
         }

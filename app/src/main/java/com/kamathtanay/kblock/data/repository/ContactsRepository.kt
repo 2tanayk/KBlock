@@ -1,14 +1,13 @@
 package com.kamathtanay.kblock.data.repository
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import com.kamathtanay.kblock.data.contacts.KBlockContactsApi
 import com.kamathtanay.kblock.data.contacts.data.ContactData
 import com.kamathtanay.kblock.data.dao.ContactDao
 import com.kamathtanay.kblock.data.db.AppDatabase
 import com.kamathtanay.kblock.data.db.entity.Contact
+import com.kamathtanay.kblock.util.CoroutineUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers
 
@@ -56,9 +55,15 @@ class ContactsRepository(private val db: AppDatabase, private val contactsApi: K
         }
 
         withContext(Dispatchers.IO) {
-            db.getContactDao().saveAllContacts(dbContactsList)
+            contactDao.saveAllContacts(dbContactsList)
         }
         Log.e("Getting contacts...", "combined")
+    }
+
+    fun updateOnContactBlockUnblock(isBlocked: Boolean, contactPhoneNo: String) {
+        CoroutineUtil.io {
+            contactDao.updateOnContactBlockUnblock(isBlocked, contactPhoneNo)
+        }
     }
 
     private suspend fun cleanContactData(contactsList: ArrayList<ContactData>): HashMap<String, String> {

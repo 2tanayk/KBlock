@@ -29,4 +29,8 @@ class ContactsViewModel(private val repository: ContactsRepository) : ViewModel(
     fun getAllUserContacts(): LiveData<List<Contact>> {
         return allUserContacts
     }
+
+    fun updateOnContactBlockedUnblocked(isBlocked: Boolean, contactPhoneNo: String){
+        repository.updateOnContactBlockUnblock(isBlocked,contactPhoneNo)
+    }
 }

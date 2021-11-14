@@ -8,6 +8,8 @@ import android.view.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.SimpleItemAnimator
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kamathtanay.kblock.R
 import com.kamathtanay.kblock.data.contacts.KBlockContactsApi
 import com.kamathtanay.kblock.data.db.AppDatabase
@@ -65,6 +67,8 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
         super.onViewCreated(view, savedInstanceState)
         binding.contactsRecyclerView.setHasFixedSize(true)
         binding.contactsRecyclerView.adapter = contactsAdapter
+
+        (binding.contactsRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         viewModel.getAllUserContacts().observe(viewLifecycleOwner, {
             Log.e("observing...", "updated value $it")
@@ -130,8 +134,21 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
         Log.e("Item", "$position clicked")
     }
 
-    override fun onBlockUnblockClick(position: Int) {
+    override fun onBlockUnblockClick(position: Int, contactItem: ContactItem) {
         Log.e("Item icon", "$position clicked")
+
+        if (contactItem.iconId == R.drawable.ic_baseline_unblock_24) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Confirmation")
+                .setMessage("Block ${contactItem.contactName}? incoming calls from this number will be disconnected")
+                .setNegativeButton("Cancel") { dialog, which ->
+                }
+                .setPositiveButton("Ok") { dialog, which ->
+                    viewModel.updateOnContactBlockedUnblocked(true, contactItem.contactNumber)
+                }.show()
+        } else {
+            viewModel.updateOnContactBlockedUnblocked(false, contactItem.contactNumber)
+        }
     }
 }
 
