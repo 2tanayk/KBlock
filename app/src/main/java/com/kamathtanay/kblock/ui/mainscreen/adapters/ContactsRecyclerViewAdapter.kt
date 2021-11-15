@@ -1,11 +1,8 @@
 package com.kamathtanay.kblock.ui.mainscreen.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,13 +10,10 @@ import com.kamathtanay.kblock.R
 import com.kamathtanay.kblock.databinding.ContactItemBinding
 import com.kamathtanay.kblock.model.ContactItem
 import com.kamathtanay.kblock.util.diffutil.ContactDiffUtil
-import kotlin.collections.toMutableList
-import java.util.*
 
 
 class ContactsRecyclerViewAdapter(val listener: OnItemClickListener) :
     ListAdapter<ContactItem, ContactsRecyclerViewAdapter.ContactViewHolder>(ContactDiffUtil()) {
-    var originalContactList = Collections.unmodifiableList(currentList)
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
@@ -27,13 +21,8 @@ class ContactsRecyclerViewAdapter(val listener: OnItemClickListener) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
-        return ContactViewHolder(
-            ContactItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        return ContactViewHolder(ContactItemBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {

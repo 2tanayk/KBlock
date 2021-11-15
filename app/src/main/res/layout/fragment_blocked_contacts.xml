@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
+        android:visibility="gone"
         android:tooltipText="Block New Number"
         app:srcCompat="@drawable/ic_baseline_dialpad_24"
         tools:ignore="SpeakableTextPresentCheck" />
