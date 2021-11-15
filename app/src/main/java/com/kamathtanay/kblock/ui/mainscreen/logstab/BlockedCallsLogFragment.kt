@@ -3,6 +3,7 @@ package com.kamathtanay.kblock.ui.mainscreen.logstab
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.kamathtanay.kblock.R
 import com.kamathtanay.kblock.databinding.FragmentBlockedCallsLogBinding
@@ -32,6 +33,10 @@ class BlockedCallLogFragment : Fragment() {
         menu.removeItem(ConstantsMain.ITEM_UNBLOCK_ALL)
         menu.removeItem(ConstantsMain.ITEM_REFRESH_CONTACTS)
         menu.add(Menu.NONE, ConstantsMain.ITEM_DELETE_ALL_LOGS, Menu.NONE, "Delete All")
+
+        val searchItem = menu.findItem(R.id.main_search_bar)
+        val searchView: SearchView = searchItem.actionView as SearchView
+        searchView.queryHint="Search Logs"
     }
 
     override fun onDestroyView() {

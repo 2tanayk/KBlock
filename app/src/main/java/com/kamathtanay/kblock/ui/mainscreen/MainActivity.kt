@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.View
+import android.widget.AutoCompleteTextView
+import android.widget.SearchView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -14,6 +17,10 @@ import com.kamathtanay.kblock.ui.mainscreen.adapters.MainViewPagerAdapter
 import com.kamathtanay.kblock.ui.mainscreen.blockedtab.BlockedContactsFragment
 import com.kamathtanay.kblock.ui.mainscreen.contactstab.UserContactsFragment
 import com.kamathtanay.kblock.ui.mainscreen.logstab.BlockedCallLogFragment
+import android.widget.EditText
+
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,13 +29,13 @@ class MainActivity : AppCompatActivity() {
     private val userContactsFragment: UserContactsFragment = UserContactsFragment()
     private val blockedCallsLogFragment: BlockedCallLogFragment = BlockedCallLogFragment()
 
-    val tabTitleArray = arrayOf(
+    private val tabTitleArray = arrayOf(
         "Blocked",
         "Contacts",
         "Logs"
     )
 
-    val tabIconArray = arrayOf(
+    private val tabIconArray = arrayOf(
         R.drawable.ic_baseline_block_24,
         R.drawable.ic_baseline_people_24,
         R.drawable.ic_disconnect
@@ -62,6 +69,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.activity_main_menu, menu)
+        val searchItem = menu?.findItem(R.id.main_search_bar)
+        val searchView: SearchView = searchItem?.actionView as SearchView
+        val searchSrcTextId = resources.getIdentifier("android:id/search_src_text", null, null)
+        val searchTextView = searchView.findViewById(searchSrcTextId) as EditText
+        searchTextView.setTextColor(ContextCompat.getColor(this, R.color.white))
+        searchTextView.setHintTextColor(ContextCompat.getColor(this, R.color.white))
+        searchTextView.textSize = 16F
         return true
     }
 }

@@ -4,22 +4,26 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kamathtanay.kblock.R
-import com.kamathtanay.kblock.data.db.entity.Contact
 import com.kamathtanay.kblock.databinding.ContactItemBinding
 import com.kamathtanay.kblock.model.ContactItem
 import com.kamathtanay.kblock.util.diffutil.ContactDiffUtil
+import kotlin.collections.toMutableList
+import java.util.*
+
 
 class ContactsRecyclerViewAdapter(val listener: OnItemClickListener) :
     ListAdapter<ContactItem, ContactsRecyclerViewAdapter.ContactViewHolder>(ContactDiffUtil()) {
+    var originalContactList = Collections.unmodifiableList(currentList)
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
-        fun onBlockUnblockClick(position: Int,contactItem: ContactItem)
+        fun onBlockUnblockClick(position: Int, contactItem: ContactItem)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -39,17 +43,16 @@ class ContactsRecyclerViewAdapter(val listener: OnItemClickListener) :
                 nameTextView.text = contactName
                 numberTextView.text = contactNumber
                 blockUnblockBtn.setImageResource(iconId)
-                blockUnblockLabel.text=if(iconId==R.drawable.ic_baseline_block_24) {
-                     blockUnblockLabel.setTextColor(ContextCompat.getColor(blockUnblockLabel.context,R.color.red_orange))
+                blockUnblockLabel.text = if (iconId == R.drawable.ic_baseline_block_24) {
+                    blockUnblockLabel.setTextColor(ContextCompat.getColor(blockUnblockLabel.context, R.color.red_orange))
                     "Unblock"
-                }else{
-                    blockUnblockLabel.setTextColor(ContextCompat.getColor(blockUnblockLabel.context,R.color.prussian_blue))
+                } else {
+                    blockUnblockLabel.setTextColor(ContextCompat.getColor(blockUnblockLabel.context, R.color.prussian_blue))
                     "Block"
                 }
             }
         }
     }
-
 
     inner class ContactViewHolder(val b: ContactItemBinding) :
         RecyclerView.ViewHolder(b.root), View.OnClickListener {

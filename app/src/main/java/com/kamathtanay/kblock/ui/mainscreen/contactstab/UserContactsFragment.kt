@@ -5,6 +5,7 @@ import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.SearchView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +23,6 @@ import com.kamathtanay.kblock.ui.mainscreen.ConstantsMain.MAIN_SHARED_PREFS
 import com.kamathtanay.kblock.ui.mainscreen.adapters.ContactsRecyclerViewAdapter
 import com.kamathtanay.kblock.util.PermissionUtil.hasPermission
 import com.kamathtanay.kblock.util.PermissionUtil.requestPermission
-import com.kamathtanay.kblock.util.SharedPrefsUtil
 import com.kamathtanay.kblock.util.SharedPrefsUtil.createAndEditSharedPrefs
 import com.kamathtanay.kblock.util.SharedPrefsUtil.retrieveSharedPrefs
 import com.kamathtanay.kblock.util.diffutil.hide
@@ -31,6 +31,7 @@ import com.kamathtanay.kblock.viewmodel.ContactsViewModel
 import com.kamathtanay.kblock.viewmodel.ContactsViewModelFactory
 import java.util.concurrent.CancellationException
 
+
 class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClickListener {
     private var _binding: FragmentUserContactsBinding? = null
     private val binding get() = _binding!!
@@ -38,6 +39,7 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
     private lateinit var viewModel: ContactsViewModel
     private lateinit var checkPermission: ActivityResultLauncher<String>
     private lateinit var contactsAdapter: ContactsRecyclerViewAdapter
+    private lateinit var contactsSearchView:SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +51,6 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val db = AppDatabase(requireContext())
         val contactsApi = KBlockContactsApi(requireContext())
         val repository = ContactsRepository(db, contactsApi)
@@ -75,10 +76,7 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
             if (retrieveSharedPrefs(requireActivity(), MAIN_SHARED_PREFS).getBoolean(MAIN_IS_CONTACTS_IMPORTED, false)) {
                 binding.userContactsViewContainer.hide()
                 binding.contactsProgressBar.show()
-                val recyclerViewContacts: MutableList<ContactItem> = it.map { contact ->
-                    ContactItem(contact.id, contact.contactName, contact.contactPhoneNumber,
-                        if (contact.isBlocked) R.drawable.ic_baseline_block_24 else R.drawable.ic_baseline_unblock_24)
-                }.toMutableList()
+                val recyclerViewContacts: MutableList<ContactItem> = viewModel.prepareDataForContactsRecyclerView(it)
                 binding.contactsRecyclerView.show()
                 contactsAdapter.submitList(recyclerViewContacts)
                 binding.contactsProgressBar.hide()
@@ -107,6 +105,12 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
                 checkPermission.launch(Manifest.permission.READ_CONTACTS)
             }
         }
+
+        binding.searchFab.setOnClickListener {
+            if (::contactsSearchView.isInitialized) {
+                contactsSearchView.onActionViewExpanded()
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -118,6 +122,41 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
         menu.removeItem(ConstantsMain.ITEM_DELETE_ALL_LOGS)
         menu.removeItem(ConstantsMain.ITEM_UNBLOCK_ALL)
         menu.add(Menu.NONE, ConstantsMain.ITEM_REFRESH_CONTACTS, Menu.NONE, "Refresh")
+
+        val searchItem = menu.findItem(R.id.main_search_bar)
+
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener{
+            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                Log.e("SearchView","Opening")
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                contactsAdapter.submitList(viewModel.prepareDataForContactsRecyclerView(viewModel.getAllUserContacts().value!!))
+                binding.contactsRecyclerView.layoutManager?.scrollToPosition(0)
+                Log.e("SearchView","Closing")
+                return true
+            }
+        })
+        val searchView: SearchView = searchItem.actionView as SearchView
+        contactsSearchView=searchView
+        searchView.queryHint = "Search Contacts"
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                Log.e("QuerySubmitted",query)
+                val result= viewModel.filterContactsList(query)
+                contactsAdapter.submitList(result)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                Log.e("Query",query)
+                val result=viewModel.filterContactsList(query)
+                contactsAdapter.submitList(result)
+                return false
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
