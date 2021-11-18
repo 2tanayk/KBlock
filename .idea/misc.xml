@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/edit_text_border.xml" value="0.18385416666666668" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/ic_baseline_block_24.xml" value="0.18385416666666668" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/ic_baseline_people_24.xml" value="0.18385416666666668" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/drawable/ic_baseline_phone_callback_24.xml" value="0.18385416666666668" />
@@ -14,6 +15,7 @@
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/layout/activity_main.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/layout/activity_splash_screen.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/layout/contact_item.xml" value="0.22" />
+        <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/layout/dialog_add_number.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/layout/fragment_blocked_call_log.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/layout/fragment_blocked_calls_log.xml" value="0.16770833333333332" />
         <entry key="..\:/Users/tanay/AndroidStudioProjects/KBlock/app/src/main/res/layout/fragment_blocked_contacts.xml" value="0.16770833333333332" />

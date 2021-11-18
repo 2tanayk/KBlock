@@ -16,7 +16,9 @@ import com.kamathtanay.kblock.data.repository.BlockedRepository
 import com.kamathtanay.kblock.databinding.FragmentBlockedContactsBinding
 import com.kamathtanay.kblock.model.ContactItem
 import com.kamathtanay.kblock.ui.mainscreen.ConstantsMain
+import com.kamathtanay.kblock.ui.mainscreen.MainActivity
 import com.kamathtanay.kblock.ui.mainscreen.adapters.BlockedRecyclerViewAdapter
+import com.kamathtanay.kblock.ui.mainscreen.blockedtab.dialog.AddNumberDialog
 import com.kamathtanay.kblock.util.PermissionUtil.hasPermission
 import com.kamathtanay.kblock.util.PermissionUtil.requestPermission
 import com.kamathtanay.kblock.util.diffutil.hide
@@ -25,7 +27,7 @@ import com.kamathtanay.kblock.viewmodel.BlockedViewModel
 import com.kamathtanay.kblock.viewmodel.BlockedViewModelFactory
 
 
-class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemClickListener {
+class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemClickListener,MainActivity.DataListener {
     private var _binding: FragmentBlockedContactsBinding? = null
     private val binding get() = _binding!!
 
@@ -37,6 +39,9 @@ class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemCli
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkCallingPermission = requestPermission(this)
+
+        val mainActivity = activity as MainActivity
+        mainActivity.setDataListener(this)
     }
 
     override fun onCreateView(
@@ -102,6 +107,10 @@ class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemCli
                 binding.blockedContactsViewContainer.show()
             }
         })
+
+        binding.searchFab.setOnClickListener {
+            (activity as MainActivity).openAddNumberDialog()
+        }
     }
 
     override fun onDestroyView() {
@@ -152,5 +161,9 @@ class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemCli
 
     override fun onBlockUnblockClick(position: Int, contactItem: ContactItem) {
         viewModel.unblockContact(contactPhoneNo = contactItem.contactNumber)
+    }
+
+    override fun newBlockedNumberListener(phoneNumber: String) {
+        Log.e("Data recd.", phoneNumber)
     }
 }

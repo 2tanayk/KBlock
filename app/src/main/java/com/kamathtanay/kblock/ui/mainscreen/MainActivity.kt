@@ -2,6 +2,8 @@ package com.kamathtanay.kblock.ui.mainscreen
 
 import android.content.Intent
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.widget.EditText
@@ -16,12 +18,19 @@ import com.kamathtanay.kblock.databinding.ActivityMainBinding
 import com.kamathtanay.kblock.service.PhoneStateService
 import com.kamathtanay.kblock.ui.mainscreen.adapters.MainViewPagerAdapter
 import com.kamathtanay.kblock.ui.mainscreen.blockedtab.BlockedContactsFragment
+import com.kamathtanay.kblock.ui.mainscreen.blockedtab.dialog.AddNumberDialog
 import com.kamathtanay.kblock.ui.mainscreen.contactstab.UserContactsFragment
 import com.kamathtanay.kblock.ui.mainscreen.logstab.BlockedCallLogFragment
+import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AddNumberDialog.AddNumberDialogListener {
 
+    interface DataListener{
+        fun newBlockedNumberListener(phoneNumber: String)
+    }
+
+    private lateinit var dataListener: DataListener
     private lateinit var binding: ActivityMainBinding
     private val blockedContactsFragment: BlockedContactsFragment = BlockedContactsFragment()
     private val userContactsFragment: UserContactsFragment = UserContactsFragment()
@@ -80,4 +89,17 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun addNumber(phoneNumber: String) {
+        Log.e("Number:", phoneNumber)
+        dataListener.newBlockedNumberListener("+91$phoneNumber")
+    }
+
+    fun openAddNumberDialog() {
+        val addNumberDialog=AddNumberDialog()
+        addNumberDialog.show(supportFragmentManager,"AddNumberDialog")
+    }
+
+    fun setDataListener(listener: DataListener) {
+        this.dataListener = listener
+    }
 }
