@@ -20,6 +20,14 @@ object PermissionUtil {
         }
     }
 
+    fun requestMultiplePermissions(ctx: Fragment): ActivityResultLauncher<Array<String>> {
+        return ctx.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.entries.forEach {
+                Log.e("Permission Result", "${it.key} = ${it.value}")
+            }
+        }
+    }
+
     fun hasPermission(ctx: Context, permission: String) =
         ContextCompat.checkSelfPermission(ctx, permission) == PackageManager.PERMISSION_GRANTED
 }

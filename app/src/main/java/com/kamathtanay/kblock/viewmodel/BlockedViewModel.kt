@@ -44,4 +44,8 @@ class BlockedViewModel(private val repository: BlockedRepository):ViewModel() {
         }
         return filteredBlockedList
     }
+
+    fun insertNewBlockedNumber(contact:Contact){
+        repository.insertNewBlockedNumber(contact)
+    }
 }

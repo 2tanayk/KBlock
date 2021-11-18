@@ -11,7 +11,7 @@ import java.util.*
 data class Contact(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "user_id")
-    val id: Int=0,
+    val id: Int = 0,
     @ColumnInfo(name = "contact_name")
     val contactName: String,
     @ColumnInfo(name = "contact_phone_number")
@@ -21,5 +21,7 @@ data class Contact(
     @TypeConverters(Converters::class)
     @ColumnInfo(name = "date_blocked")
     val dateBlocked: Date? = null,
+    @ColumnInfo(name = "is_user_contact")
+    val isUserContact: Boolean = true,
 )
 

@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="200dp"
@@ -37,6 +38,7 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:visibility="gone"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/log_item" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
