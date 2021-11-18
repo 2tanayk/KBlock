@@ -6,6 +6,7 @@ import com.kamathtanay.kblock.R
 import com.kamathtanay.kblock.data.db.entity.Contact
 import com.kamathtanay.kblock.data.repository.BlockedRepository
 import com.kamathtanay.kblock.model.ContactItem
+import java.util.*
 
 class BlockedViewModel(private val repository: BlockedRepository):ViewModel() {
     private var allBlockedContacts: LiveData<List<Contact>>
@@ -29,5 +30,18 @@ class BlockedViewModel(private val repository: BlockedRepository):ViewModel() {
 
     fun unblockContact(isBlocked: Boolean = false, contactPhoneNo: String) {
         repository.unblockContact(isBlocked, contactPhoneNo)
+    }
+
+    fun filterBlockedList(query: String): MutableList<ContactItem> {
+        val filteredBlockedList = mutableListOf<ContactItem>()
+        val originalBlockedList = prepareDataForBlockedRecyclerView(allBlockedContacts.value!!)
+
+        for (row in originalBlockedList) {
+            if (row.contactName.lowercase(Locale.getDefault()).contains(query.lowercase(Locale.getDefault()))
+                || row.contactNumber.contains(query)) {
+                filteredBlockedList.add(row)
+            }
+        }
+        return filteredBlockedList
     }
 }

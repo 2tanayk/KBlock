@@ -1,25 +1,23 @@
 package com.kamathtanay.kblock.ui.mainscreen
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.View
-import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import android.widget.SearchView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.tabs.TabLayoutMediator
 import com.kamathtanay.kblock.R
+import com.kamathtanay.kblock.data.db.AppDatabase
+import com.kamathtanay.kblock.data.repository.BlockedRepository
 import com.kamathtanay.kblock.databinding.ActivityMainBinding
+import com.kamathtanay.kblock.service.PhoneStateService
 import com.kamathtanay.kblock.ui.mainscreen.adapters.MainViewPagerAdapter
 import com.kamathtanay.kblock.ui.mainscreen.blockedtab.BlockedContactsFragment
 import com.kamathtanay.kblock.ui.mainscreen.contactstab.UserContactsFragment
 import com.kamathtanay.kblock.ui.mainscreen.logstab.BlockedCallLogFragment
-import android.widget.EditText
-
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,6 +46,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         setSupportActionBar(binding.appBarMain)
 
+        val callBlockerServiceIntent = Intent(this, PhoneStateService::class.java)
+        ContextCompat.startForegroundService(this, callBlockerServiceIntent);
+
         val mainViewPager = binding.tabsPagerMain
         val mainTabLayout = binding.tabLayoutMain
 
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         TabLayoutMediator(mainTabLayout, mainViewPager) { tab, position ->
             tab.text = tabTitleArray[position]
-            tab.icon = ContextCompat.getDrawable(applicationContext,tabIconArray[position])
+            tab.icon = ContextCompat.getDrawable(applicationContext, tabIconArray[position])
         }.attach()
     }
 
@@ -78,4 +79,5 @@ class MainActivity : AppCompatActivity() {
         searchTextView.textSize = 16F
         return true
     }
+
 }

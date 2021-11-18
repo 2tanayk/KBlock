@@ -1,10 +1,13 @@
 package com.kamathtanay.kblock.ui.mainscreen.blockedtab
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.Menu.NONE
 import android.widget.SearchView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.kamathtanay.kblock.R
@@ -14,6 +17,8 @@ import com.kamathtanay.kblock.databinding.FragmentBlockedContactsBinding
 import com.kamathtanay.kblock.model.ContactItem
 import com.kamathtanay.kblock.ui.mainscreen.ConstantsMain
 import com.kamathtanay.kblock.ui.mainscreen.adapters.BlockedRecyclerViewAdapter
+import com.kamathtanay.kblock.util.PermissionUtil.hasPermission
+import com.kamathtanay.kblock.util.PermissionUtil.requestPermission
 import com.kamathtanay.kblock.util.diffutil.hide
 import com.kamathtanay.kblock.util.diffutil.show
 import com.kamathtanay.kblock.viewmodel.BlockedViewModel
@@ -26,39 +31,72 @@ class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemCli
 
     private lateinit var viewModel: BlockedViewModel
     private lateinit var blockedAdapter: BlockedRecyclerViewAdapter
-    private lateinit var blockedSearchView:SearchView
+    private lateinit var blockedSearchView: SearchView
+    private lateinit var checkCallingPermission: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkCallingPermission = requestPermission(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentBlockedContactsBinding.inflate(inflater, container, false)
         val view = binding.root
         val db = AppDatabase(requireContext())
         val repository = BlockedRepository(db)
         val factory = BlockedViewModelFactory(repository)
-        blockedAdapter=BlockedRecyclerViewAdapter(this)
+        blockedAdapter = BlockedRecyclerViewAdapter(this)
 
         viewModel = ViewModelProvider(this, factory).get(BlockedViewModel::class.java)
         setHasOptionsMenu(true)
+
+        if (!hasPermission(requireContext(), Manifest.permission.READ_PHONE_STATE)) {
+            checkCallingPermission.launch(Manifest.permission.READ_PHONE_STATE)
+        }
+
+        if (!hasPermission(requireContext(), Manifest.permission.CALL_PHONE)) {
+            checkCallingPermission.launch(Manifest.permission.CALL_PHONE)
+        }
+
+        if (!hasPermission(requireContext(), Manifest.permission.READ_CALL_LOG)) {
+            checkCallingPermission.launch(Manifest.permission.READ_CALL_LOG)
+        }
+
+
+        if (!hasPermission(requireContext(), Manifest.permission.ANSWER_PHONE_CALLS)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                checkCallingPermission.launch(Manifest.permission.ANSWER_PHONE_CALLS)
+            }
+        }
+
+//        if (!hasPermission(requireContext(), Manifest.permission.BIND_SCREENING_SERVICE)) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                checkCallingPermission.launch(Manifest.permission.BIND_SCREENING_SERVICE)
+//            }
+//        }
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.blockedRecyclerView.setHasFixedSize(true)
-        binding.blockedRecyclerView.adapter=blockedAdapter
+        binding.blockedRecyclerView.adapter = blockedAdapter
 
-        viewModel.getAllBlockedContacts().observe(viewLifecycleOwner,{
-            Log.e("blocked contacts",it.toString())
-            val blockedContacts: MutableList<ContactItem> = viewModel.prepareDataForBlockedRecyclerView(it)
-            if (blockedContacts.size>0){
+        viewModel.getAllBlockedContacts().observe(viewLifecycleOwner, {
+            Log.e("blocked contacts", it.toString())
+            val blockedContacts: MutableList<ContactItem> =
+                viewModel.prepareDataForBlockedRecyclerView(it)
+            if (blockedContacts.size > 0) {
                 binding.blockedContactsViewContainer.hide()
                 binding.blockedRecyclerView.show()
                 blockedAdapter.submitList(blockedContacts)
                 binding.searchFab.show()
-            }else{
+            } else {
                 binding.blockedRecyclerView.hide()
                 binding.searchFab.hide()
                 binding.blockedContactsViewContainer.show()
@@ -80,6 +118,22 @@ class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemCli
         val searchView: SearchView = searchItem.actionView as SearchView
         blockedSearchView = searchView
         searchView.queryHint = "Search Blocked Contacts"
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                Log.e("QuerySubmitted", query)
+                val result = viewModel.filterBlockedList(query)
+                blockedAdapter.submitList(result)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                Log.e("Query", query)
+                val result = viewModel.filterBlockedList(query)
+                blockedAdapter.submitList(result)
+                return false
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

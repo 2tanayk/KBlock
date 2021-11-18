@@ -10,12 +10,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
 object PermissionUtil {
-    fun requestPermission(ctx: Fragment): ActivityResultLauncher<String> {
+    fun requestPermission(ctx: Fragment, permission: String=""): ActivityResultLauncher<String> {
         return ctx.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 Log.e("Permission", "Granted")
             } else {
-                Log.e("Permission", "Denied")
+                Log.e("Permission", "Denied $permission")
             }
         }
     }

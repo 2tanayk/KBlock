@@ -37,13 +37,13 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
     private val binding get() = _binding!!
 
     private lateinit var viewModel: ContactsViewModel
-    private lateinit var checkPermission: ActivityResultLauncher<String>
+    private lateinit var checkContactsPermission: ActivityResultLauncher<String>
     private lateinit var contactsAdapter: ContactsRecyclerViewAdapter
     private lateinit var contactsSearchView:SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        checkPermission = requestPermission(this)
+        checkContactsPermission = requestPermission(this)
     }
 
     override fun onCreateView(
@@ -102,7 +102,7 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
                     Log.e("Exception", e.printStackTrace().toString())
                 }
             } else {
-                checkPermission.launch(Manifest.permission.READ_CONTACTS)
+                checkContactsPermission.launch(Manifest.permission.READ_CONTACTS)
             }
         }
 
