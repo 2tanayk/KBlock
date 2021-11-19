@@ -71,7 +71,23 @@ class BlockedCallLogFragment : Fragment() {
 
         val searchItem = menu.findItem(R.id.main_search_bar)
         val searchView: SearchView = searchItem.actionView as SearchView
-        searchView.queryHint="Search Logs"
+        searchView.queryHint = "Search Logs"
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                Log.e("QuerySubmitted", query)
+                val result = viewModel.filterCallLogsList(query)
+                callLogsAdapter.submitList(result)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                Log.e("Query", query)
+                val result = viewModel.filterCallLogsList(query)
+                callLogsAdapter.submitList(result)
+                return false
+            }
+        })
     }
 
     override fun onDestroyView() {
@@ -84,6 +100,8 @@ class BlockedCallLogFragment : Fragment() {
         when (id) {
             ConstantsMain.ITEM_DELETE_ALL_LOGS -> {
                 Log.e("Item: ${ConstantsMain.ITEM_DELETE_ALL_LOGS}", "clicked!")
+                viewModel.deleteAllCallLogs()
+                Log.e("Result","Deleted all logs!")
             }
         }
         return false

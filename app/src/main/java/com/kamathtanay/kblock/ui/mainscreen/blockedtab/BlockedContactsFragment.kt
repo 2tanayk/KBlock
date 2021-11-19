@@ -36,12 +36,10 @@ class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemCli
     private lateinit var viewModel: BlockedViewModel
     private lateinit var blockedAdapter: BlockedRecyclerViewAdapter
     private lateinit var blockedSearchView: SearchView
-    private lateinit var checkCallingPermission: ActivityResultLauncher<String>
     private lateinit var checkMultiplePermissions:ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        checkCallingPermission = requestPermission(this)
         checkMultiplePermissions= requestMultiplePermissions(this)
 
         val mainActivity = activity as MainActivity
@@ -62,25 +60,6 @@ class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemCli
 
         viewModel = ViewModelProvider(this, factory).get(BlockedViewModel::class.java)
         setHasOptionsMenu(true)
-
-//        if (!hasPermission(requireContext(), Manifest.permission.READ_PHONE_STATE)) {
-//            checkCallingPermission.launch(Manifest.permission.READ_PHONE_STATE)
-//        }
-//
-//        if (!hasPermission(requireContext(), Manifest.permission.CALL_PHONE)) {
-//            checkCallingPermission.launch(Manifest.permission.CALL_PHONE)
-//        }
-//
-//        if (!hasPermission(requireContext(), Manifest.permission.READ_CALL_LOG)) {
-//            checkCallingPermission.launch(Manifest.permission.READ_CALL_LOG)
-//        }
-//
-//
-//        if (!hasPermission(requireContext(), Manifest.permission.ANSWER_PHONE_CALLS)) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                checkCallingPermission.launch(Manifest.permission.ANSWER_PHONE_CALLS)
-//            }
-//        }
 
         if (!hasPermission(requireContext(), Manifest.permission.ANSWER_PHONE_CALLS) ||
             !hasPermission(requireContext(), Manifest.permission.READ_CALL_LOG) ||

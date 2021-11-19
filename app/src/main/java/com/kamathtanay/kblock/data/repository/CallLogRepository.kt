@@ -24,4 +24,10 @@ class CallLogRepository(private val db: AppDatabase) {
             callLogDao.insertNewCallLog(callLog)
         }
     }
+
+    fun deleteAllCallLogs() {
+        CoroutineUtil.io {
+            callLogDao.deleteAllCallLogs()
+        }
+    }
 }
