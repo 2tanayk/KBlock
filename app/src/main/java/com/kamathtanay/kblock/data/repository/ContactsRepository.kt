@@ -82,4 +82,43 @@ class ContactsRepository(private val db: AppDatabase, private val contactsApi: K
     fun getAllUserContacts(): LiveData<List<Contact>> {
         return allContacts
     }
+
+    fun refreshUserContacts() {
+        CoroutineUtil.default {
+            val updatedUserContactsList = retrieveAllContacts()
+            val updatedUserContactsHashMap = cleanContactData(updatedUserContactsList)
+            val currentUserContactsHashMap = getCurrentUserContactsHashMap()
+
+            for ((key, value) in updatedUserContactsHashMap) {
+                if (currentUserContactsHashMap.containsKey(key)) {
+                    if (!currentUserContactsHashMap[key].equals(updatedUserContactsHashMap[key])) {
+                        CoroutineUtil.io {
+                            Log.e("ContactsRepository","updating contact to $value..")
+                            contactDao.updateUserContact(updatedUserContactsHashMap[key]!!, key)
+                        }
+                    }
+                } else {
+                    CoroutineUtil.io {
+                        Log.e("ContactsRepository","new contact $value-$key")
+                        contactDao.insertNewUserContact(Contact(contactName = value, contactPhoneNumber = key))
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun getCurrentUserContactsHashMap(): HashMap<String, String> {
+        val currentContactsHashMap: HashMap<String, String> = HashMap()
+        val currentContactsList = allContacts.value
+
+        if (currentContactsList != null) {
+            for (contact in currentContactsList) {
+                currentContactsHashMap[contact.contactPhoneNumber] = contact.contactName
+            }
+        } else {
+            Log.e("ContactsRepository", "currentContactsList is null")
+        }
+
+        return currentContactsHashMap
+    }
 }

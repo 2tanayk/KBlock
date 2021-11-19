@@ -164,6 +164,7 @@ class UserContactsFragment : Fragment(), ContactsRecyclerViewAdapter.OnItemClick
         when (id) {
             ConstantsMain.ITEM_REFRESH_CONTACTS -> {
                 Log.e("Item: ${ConstantsMain.ITEM_REFRESH_CONTACTS}", "clicked!")
+                viewModel.refreshUserContacts()
             }
         }
         return false

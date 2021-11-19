@@ -31,4 +31,10 @@ interface ContactDao {
     @Query("UPDATE contact_table SET is_blocked=:newOldIsBlocked WHERE is_blocked=:oldIsBlocked")
     suspend fun unblockAllContacts(oldIsBlocked: Boolean = true, newOldIsBlocked: Boolean = false)
 
+    @Query("UPDATE contact_table SET contact_name=:contactName WHERE contact_phone_number=:contactPhoneNo")
+    suspend fun updateUserContact(contactName: String, contactPhoneNo: String)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNewUserContact(contact: Contact)
+
 }

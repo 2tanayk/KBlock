@@ -15,5 +15,8 @@ object CoroutineUtil {
             work()
         }
 
-
+    fun default(work: suspend (() -> Unit)) =
+        CoroutineScope(Dispatchers.Default).launch {
+            work()
+        }
 }

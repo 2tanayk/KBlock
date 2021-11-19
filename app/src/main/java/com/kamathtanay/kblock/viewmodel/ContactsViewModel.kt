@@ -56,4 +56,8 @@ class ContactsViewModel(private val repository: ContactsRepository) : ViewModel(
         }
         return filteredContactList
     }
+
+    fun refreshUserContacts(){
+        repository.refreshUserContacts()
+    }
 }
