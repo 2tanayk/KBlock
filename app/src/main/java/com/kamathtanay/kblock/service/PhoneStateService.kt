@@ -13,7 +13,9 @@ import android.os.IBinder
 import android.telecom.TelecomManager
 import android.telephony.PhoneStateListener
 import android.telephony.PhoneStateListener.LISTEN_CALL_STATE
+import android.telephony.PhoneStateListener.LISTEN_NONE
 import android.telephony.TelephonyManager
+import android.telephony.TelephonyManager.CALL_STATE_RINGING
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Observer
@@ -39,6 +41,7 @@ class PhoneStateService : Service() {
     private lateinit var telecomManager:TelecomManager
     private lateinit var phoneStateListener: PhoneStateListener
     private lateinit var blockedContactList:List<Contact>
+    private var isCallListenerAttached:Boolean=false
 
 
     override fun onCreate() {
@@ -74,16 +77,21 @@ class PhoneStateService : Service() {
                         if (contact.contactPhoneNumber.equals(phoneNumber)) {
                             Log.e("No.$phoneNumber in list", "ending call")
                             telecomManager.endCall()
-                            informUserWithNotification(contact.contactName)
-                            saveToBlockedCallLogs(contact.contactName, phoneNumber)
+                            if (state == CALL_STATE_RINGING) {
+                                informUserWithNotification(contact.contactName)
+                                saveToBlockedCallLogs(contact.contactName, phoneNumber)
+                            }
                             break
                         }
                     }
                 }
             }
-            }
+        }
 
-        telephonyManager.listen(phoneStateListener, LISTEN_CALL_STATE)
+        if (!isCallListenerAttached) {
+            telephonyManager.listen(phoneStateListener, LISTEN_CALL_STATE)
+            isCallListenerAttached=true
+        }
 
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -124,6 +132,10 @@ class PhoneStateService : Service() {
         super.onDestroy()
         if (::blockedContactsObserver.isInitialized) {
             blockedRepository.getAllBlockedContacts().removeObserver(blockedContactsObserver)
+        }
+
+        if (::telephonyManager.isInitialized && ::phoneStateListener.isInitialized) {
+            telephonyManager.listen(phoneStateListener, LISTEN_NONE)
         }
     }
 }
