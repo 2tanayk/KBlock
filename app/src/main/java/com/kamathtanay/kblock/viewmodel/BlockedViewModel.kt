@@ -48,4 +48,8 @@ class BlockedViewModel(private val repository: BlockedRepository):ViewModel() {
     fun insertNewBlockedNumber(contact:Contact){
         repository.insertNewBlockedNumber(contact)
     }
+
+    fun unblockAllContacts() {
+        repository.unblockAllContacts()
+    }
 }

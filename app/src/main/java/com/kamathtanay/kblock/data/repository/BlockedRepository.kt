@@ -30,4 +30,11 @@ class BlockedRepository(private val db: AppDatabase) {
             contactDao.insertNewBlockedNumber(contact)
         }
     }
+
+    fun unblockAllContacts() {
+        CoroutineUtil.io {
+            contactDao.unblockAllContacts()
+        }
+    }
+
 }

@@ -138,6 +138,8 @@ class BlockedContactsFragment : Fragment(), BlockedRecyclerViewAdapter.OnItemCli
         when (id) {
             ConstantsMain.ITEM_UNBLOCK_ALL -> {
                 Log.e("Item: ${ConstantsMain.ITEM_UNBLOCK_ALL}", "clicked!")
+                viewModel.unblockAllContacts()
+                Log.e("Unblocking all contacts", "done!")
             }
         }
         return false

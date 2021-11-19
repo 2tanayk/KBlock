@@ -28,4 +28,7 @@ interface ContactDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewBlockedNumber(contact: Contact)
 
+    @Query("UPDATE contact_table SET is_blocked=:newOldIsBlocked WHERE is_blocked=:oldIsBlocked")
+    suspend fun unblockAllContacts(oldIsBlocked: Boolean = true, newOldIsBlocked: Boolean = false)
+
 }
