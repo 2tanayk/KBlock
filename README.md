@@ -8,9 +8,10 @@ KBlock - A call blocking android app (currently works for API 28+)
 
 ## About
 - It imports all the user contacts from the Contacts Content Provider, cleans duplicate contacts (if any,in app, without altering the actual contacts list) and loads it into perisistent storage(SQLite database), then gives user an option to block(or unblock) a contact. A refresh button is also provided in case there is a change in user contacts and thus KBlock's contact list is in sync with the user's contacts.
-- Blocked contacts are saved separately in a tab and can be unblocked immediately.
+- Users can also block numbers which are not a part of their contacts, through the floating button (bottom right) in the 'Blocked' tab.
+- Blocked contacts are saved separately in the 'Blocked' tab and can be unblocked immediately.
 - As soon as a particular blocked user places a call, the call is immediately disconnected and the user is notified about it as well.
-- Finally we also provide a log of calls from the blocked user (which was disconnected by the app).
+- Finally we also provide a log of calls from the blocked user (which was disconnected by the app) in the 'Logs' tab.
 
 ## Demonstration
 
