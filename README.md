@@ -12,6 +12,10 @@ KBlock - A call blocking android app (currently works for API 28+)
 - As soon as a particular blocked user places a call, the call is immediately disconnected and the user is notified about it as well.
 - Finally we also provide a log of calls from the blocked user (which was disconnected by the app).
 
+## Demonstration
+
+![Kblock](https://user-images.githubusercontent.com/60653277/142740563-6f4d2887-7479-42c1-adfa-976fbc491995.gif)
+
 ## Built With
 - [Kotlin](https://kotlinlang.org/) - Official programming language for Android development.
 - [Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) - For asynchronous programming
