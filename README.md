@@ -4,7 +4,7 @@
 
 ### Introduction
 
-KBlock - A call blocking android app
+KBlock - A call blocking android app (currently works for API 28+)
 
 ## About
 - It imports all the user contacts from the Contacts Content Provider, cleans duplicate contacts (if any,in app, without altering the actual contacts list) and loads it into perisistent storage(SQLite database), then gives user an option to block(or unblock) a contact. A refresh button is also provided in case there is a change in user contacts and thus KBlock's contact list is in sync with the user's contacts.
