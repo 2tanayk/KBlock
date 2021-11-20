@@ -71,17 +71,19 @@ class PhoneStateService : Service() {
             override fun onCallStateChanged(state: Int, phoneNumber: String?) {
                 super.onCallStateChanged(state, phoneNumber)
                 Log.e("Call from", "$phoneNumber")
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    for (contact in blockedContactList) {
-                        Log.e("Contact in list", contact.contactPhoneNumber)
-                        if (contact.contactPhoneNumber.equals(phoneNumber)) {
-                            Log.e("No.$phoneNumber in list", "ending call")
-                            telecomManager.endCall()
-                            if (state == CALL_STATE_RINGING) {
-                                informUserWithNotification(contact.contactName)
-                                saveToBlockedCallLogs(contact.contactName, phoneNumber)
+                if (::blockedContactList.isInitialized) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        for (contact in blockedContactList) {
+                            Log.e("Contact in list", contact.contactPhoneNumber)
+                            if (contact.contactPhoneNumber.equals(phoneNumber)) {
+                                Log.e("No.$phoneNumber in list", "ending call")
+                                telecomManager.endCall()
+                                if (state == CALL_STATE_RINGING) {
+                                    informUserWithNotification(contact.contactName)
+                                    saveToBlockedCallLogs(contact.contactName, phoneNumber)
+                                }
+                                break
                             }
-                            break
                         }
                     }
                 }
