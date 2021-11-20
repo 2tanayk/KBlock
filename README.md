@@ -2,13 +2,6 @@
 
 <img width="600" alt="kblock" src="https://user-images.githubusercontent.com/60653277/142725041-9942e985-96fd-4edc-ad12-3ec3d41b8f2e.png">
 
-### Table of Contents
-
--   [Introduction](#introduction)
--   [About](#about)
--   [Built With](#built-with)
--   [Architecture](#architecture)
-
 ### Introduction
 
 KBlock - A call blocking android app
